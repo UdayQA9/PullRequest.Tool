@@ -1,2 +1,18 @@
-# PullRequest.Tool
-This tool allows you to easily export pull request data from an Azure DevOps repository to an Excel sheet with a single click. It is especially useful during product releases and for auditing purposes, enabling quick access to organized pull request information.
+The PullRequest.Tool allows you to effortlessly export pull request data from an Azure DevOps repository into an Excel sheet with a single click. This functionality is especially useful during product releases and for auditing, providing quick access to organized pull request information.
+
+Instructions:
+
+Download and Extract
+Download the project to your local machine and extract the contents.
+
+Run the Tool
+Open the extracted folder, then double-click on index.html to run the tool.
+
+Fill in Details
+Complete the necessary fields in the form, then click the Fetch button.
+
+Note:
+
+Ensure you have access to the Azure DevOps repository.
+You will need a Personal Access Token (PAT) to fetch the data.
+Once complete, you’ll see pull request data displayed in a table. You can then export this data to Excel with a single click.
