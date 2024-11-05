@@ -1,0 +1,213 @@
+
+body {
+  background-color: whitesmoke;
+  align-items: center;
+}
+
+/* Media Query for Mobile */
+@media only screen and (max-width: 600px) {
+  body {
+    align-items: flex-start;
+  }
+}
+
+/* Media Query for Tablet */
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+  body {
+    align-items: center;
+  }
+}
+
+/* Media Query for Desktop */
+@media only screen and (min-width: 1024px) and (max-width: 1440px) {
+  body {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* Media Query for Large Desktop */
+@media only screen and (min-width: 1440px) {
+  body {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+#container {
+  /* background: rgba(6, 116, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); */
+  border-radius: 20px;
+  background-image: url(https://cdn.pixabay.com/photo/2018/04/28/22/03/tree-3358468_1280.jpg);
+  position: relative;
+  background-image: cover;
+  margin: 20px auto;
+}
+
+#exportButton1,
+#exportButton2 {
+  margin: 20px;
+  border: 2px solid black;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+}
+
+#exportButton1:hover{
+  background-color: #3D1152;
+  color: white;
+  box-shadow: 3px 2px 3px gray;
+}
+
+.form {
+  margin-left: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 60vh;
+  padding: 20px;
+}
+
+/* Media Query for Mobile */
+@media only screen and (max-width: 600px) {
+  .form {
+    margin-left: 0;
+    height: auto;
+    overflow: auto;
+  }
+}
+
+/* Media Query for Tablet */
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+  .form {
+    margin-left: 100px;
+    height: auto;
+  }
+}
+
+/* Media Query for Desktop */
+@media only screen and (min-width: 1024px) and (max-width: 1440px) {
+  .form {
+    margin-left: 200px;
+    height: 60vh;
+  }
+}
+
+/* Media Query for Large Desktop */
+@media only screen and (min-width: 1440px) {
+  .form {
+    margin-left: 300px;
+    height: 60vh;
+  }
+}
+
+
+h1 {
+  /* text-align: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  background-color: #4daef4;
+  color: black; */
+  border-radius: 10px;
+  border: 2px solid black;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  font-style: italic;
+  width: auto;
+  height: auto;
+  /*background: #FF0000;
+   background: repeating-linear-gradient(to bottom, #FF0000 0%, #000000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; */
+  background-color: white;
+  color: #3D1152;
+}
+
+.form label {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  font-size: smaller;
+  color: white;
+  padding: 5px;
+}
+
+#pull-requests ,#tablediv {
+  display: none;
+}
+
+.outer-wrapper {
+  border: 1px solid black;
+  border-radius: 4px;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
+  max-width: fit-content;
+  max-height: fit-content;
+}
+
+.table-wrapper {
+  height: fit-content;
+  max-height: 66.4vh;
+  margin-top: 22px;
+  margin: 15px;
+  padding-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0px;
+  padding-top: 0px;
+  margin-left:auto; 
+  margin-right:auto;
+  border: 3px solid black;
+}
+
+table th {
+  background-color: #42a3f2;
+  color: black;
+  font-size: small;
+  font-weight: bold;
+  text-align: center;
+  font-size: 15px;
+  border: 1px solid black;
+}
+
+table th,
+table td {
+  padding: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+/* table td {
+  text-align: left;
+  font-size: 15px;
+  border: 1px solid black;
+  padding-left: 20px;
+}  */
+
+#pull-requests {
+  table-layout: fixed;
+  width: 100%;
+  height: 400px;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+#pull-requests thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+
+#myInput{
+  position: sticky;
+  top: 0;
+  float: inline-start;
+  border: 1px solid black;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}

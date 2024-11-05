@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebClient</title>
+  <meta name="description" content="Pull requests collector from Azure devops">
+  <meta name="keywords" content="Azure devops pull requests collector, pull requests">
+  <meta name="author" content=" ">
+
+  <!-- Style sheets  -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="shortcut icon" type="image/png" href="images/favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" crossorigin="anonymous" />
+
+  <!-- Table filter -->
+  <script src="jquery.min.js"></script>
+    <!-- Loading Script Files -->
+  <script src="background.js"></script>
+  <script src="table2excel.js"></script>
+</head>
+
+<body>
+  <div class="container shadow p-3 mb-3 bg-body rounded container-fluid" id="container">
+    <h1>
+      <!-- <i class="fa-solid fa-code-pull-request fa-xs" style="color: #000000"></i> -->
+      <img style="display: inline;width: 70px;height: 50px;" src="images/Logo.png" alt="logo" />
+      WebClient Chrome Extension Utility Tool For Pull Requests
+    </h1>
+
+    <!-- Form Code Start -->
+    <form class="form">
+      <div class="form-group row">
+        <label for="organization" class="col-sm-3 col-form-label">Organization:</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" id="organization" name="organization" placeholder="AVEVA-VSTS"
+            value="AVEVA-VSTS" required readonly />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="project" class="col-sm-3 col-form-label">Project:</label>
+        <div class="col-sm-5">
+          <select class="form-control" id="project">
+            <option selected>Select</option>
+            <option>InTouch</option>
+            <option>AppServer OMI</option>
+            <option>System Platform</option>
+            <option>Insight</option>
+            <option>Architecture</option>
+            <option>Cloud Platform</option>
+            <option>Research and Development</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="repository" class="col-sm-3 col-form-label">Repository:</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" id="repository" name="repository" placeholder="Enter Repo Name"
+            required />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="branch" class="col-sm-3 col-form-label">Branch:</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" id="branch" name="branch" placeholder="Enter Branch Name" required />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="pat" class="col-sm-3 col-form-label">Personal Access Token:</label>
+        <div class="col-sm-5">
+          <input type="password" class="form-control" id="pat" name="pat" placeholder="Enter PAT Token ID" required />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-5 offset-sm-2">
+          <button type="button" id="exportButton1" class="btn btn-success" onclick="getPullRequests()">
+            <i class="fa-solid fa-code-pull-request"></i> Fetch
+          </button>
+          <button id="exportButton2" class="btn btn-danger clearfix" onclick="tabelToExcel()" disabled>
+            Export to Excel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Table Code Start-->
+  <div id="tablediv">
+    <div class="outer-wrapper">
+      <div class="table-wrapper">
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        <div class="table-responsive" id="tablecontainer">
+          <table class="table table-bordered table-hover table-md table-responsive" id="pull-requests">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Title</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Completed Date</th>
+                <th>Status</th>
+                <th>Pull Requests</th>
+                <th>Commit ID</th>
+              </tr>
+            </thead>
+            <tbody id="myTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
