@@ -16,4 +16,4 @@ Note:
 Ensure you have access to the Azure DevOps repository.
 You will need a Personal Access Token (PAT) to fetch the data.
 Once complete, you’ll see pull request data displayed in a table. You can then export this data to Excel with a single click.
-![image](![image](https://github.com/user-attachments/assets/3867621e-8926-4ab9-a241-978185f843cf))
+![image](https://github.com/user-attachments/assets/3867621e-8926-4ab9-a241-978185f843cf))
