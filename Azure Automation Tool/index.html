@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure DevOps Pull Requests</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'azure-blue': '#0078d4',
+                        'azure-blue-dark': '#005a9e',
+                    },
+                },
+            },
+        }
+    </script>
+    <!-- Add SheetJS library for Excel export -->
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-effect {
+                @apply backdrop-blur-xl bg-white/80;
+            }
+            .panel-height {
+                height: calc(100vh - 200px);
+                min-height: 400px;
+            }
+            .header-blur {
+                @apply backdrop-blur-xl bg-white/90 shadow-md;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 p-5 font-sans text-gray-800">
+    <!-- Main container -->
+    <div class="max-w-6xl mx-auto">
+        <!-- Sticky header -->
+        <header class="sticky top-0 z-50 glass-effect rounded-md px-4 py-3 mb-6 shadow-md transition-all">
+            <h1 class="text-2xl font-bold text-azure-blue">Azure DevOps Pull Requests</h1>
+        </header>
+
+        <!-- Form section - First div for user inputs -->
+        <div id="form-section" class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">Search Parameters</h2>
+            <p class="text-sm text-gray-600 mb-4">Fields marked with <span class="text-red-500">*</span> are required.</p>
+            
+            <div id="input-section" class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                <div class="space-y-2">
+                    <label for="organization" class="block font-semibold text-gray-600">Organization: <span class="text-red-500">*</span></label>
+                    <input type="text" id="organization" value="AVEVA-VSTS" readonly
+                        class="w-full px-3 py-2 border border-gray-300 rounded bg-gray-50 cursor-not-allowed focus:outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label for="project" class="block font-semibold text-gray-600">Project: <span class="text-red-500">*</span></label>
+                    <select id="project" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-azure-blue">
+                        <option selected>Select</option>
+                        <option>InTouch</option>
+                        <option>AppServer-OMI</option>
+                        <option>System Platform</option>
+                        <option>Insight</option>
+                        <option>Architecture</option>
+                        <option>Cloud Platform</option>
+                        <option>Research and Development</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label for="repository" class="block font-semibold text-gray-600">Repository: <span class="text-red-500">*</span></label>
+                    <input type="text" id="repository" value="WebClient" placeholder="Enter repository name"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-azure-blue">
+                </div>
+                <div class="space-y-2">
+                    <label for="pat" class="block font-semibold text-gray-600">Personal Access Token: <span class="text-red-500">*</span></label>
+                    <input type="password" id="pat" placeholder="Enter your PAT Token"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-azure-blue">
+                </div>
+                <div class="space-y-2">
+                    <label for="branch" class="block font-semibold text-gray-600">Branch: <span class="text-red-500">*</label>
+                    <input type="text" id="branch" value="2023R2SP1P01" placeholder="Enter branch name"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-azure-blue">
+                </div>
+                <div class="space-y-2">
+                    <label for="status" class="block font-semibold text-gray-600">PR Status:</label>
+                    <select id="status"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-azure-blue">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="completed" selected>Completed</option>
+                        <option value="abandoned">Abandoned</option>
+                    </select>
+                </div>
+                <div class="col-span-1 md:col-span-2 mt-2">
+                    <button id="fetchButton" class="bg-azure-blue hover:bg-azure-blue-dark text-white font-bold py-3 px-5 rounded transition-colors duration-300 w-full shadow-md">
+                        Fetch Pull Requests
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-center my-6" id="loadingSpinner" style="display: none;">
+                <div class="w-10 h-10 border-4 border-gray-300 border-t-azure-blue rounded-full animate-spin"></div>
+            </div>
+
+            <div id="errorMessage" class="bg-red-50 text-red-700 p-4 rounded border border-red-300 mb-6" style="display: none;"></div>
+        </div>
+
+        <!-- Results section - Second div for results (will become sticky) -->
+        <div id="results-section" class="transition-all duration-300">
+            <!-- Results container with flex layout -->
+            <div id="results-container" class="bg-white rounded-lg shadow-md p-6 flex flex-col md:flex-row gap-6">
+                <!-- Left side - User Details Panel -->
+                <div id="sticky-user-panel" class="w-full md:w-1/3 flex flex-col">
+                    <div id="user-details-header" class="header-blur p-4 rounded-t-lg border-b border-gray-200 sticky top-20 z-30">
+                        <h2 class="text-xl font-bold text-gray-800">User Details</h2>
+                    </div>
+                    <div class="bg-gray-50 rounded-b-lg shadow-sm flex-grow overflow-hidden flex flex-col">
+                        <div id="userDetailsPanel" class="space-y-4 overflow-y-auto p-4 flex-grow">
+                            <!-- User details will be populated here -->
+                            <p class="text-gray-500 text-center py-4">Select a pull request to see user details</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right side - Pull Requests Table -->
+                <div id="sticky-table-panel" class="w-full md:w-2/3 flex flex-col">
+                    <div id="pr-table-header" class="header-blur rounded-t-lg p-4 border-b border-gray-200 sticky top-20 z-30">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-bold text-gray-800">Pull Requests</h2>
+                                <button id="exportButton" class="md:hidden flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-sm transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    Export
+                                </button>
+                            </div>
+                            <div class="flex justify-between items-center gap-2">
+                                <input type="text" id="userSearchBox" placeholder="Search by username..." 
+                                    class="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-azure-blue">
+                                <button id="clearSearchBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition-colors duration-200">
+                                    Clear
+                                </button>
+                                <button id="exportButtonDesktop" class="hidden md:flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Table Content with scrollbar -->
+                    <div class="bg-white rounded-b-lg shadow-sm flex-grow overflow-hidden">
+                        <div class="overflow-x-auto h-full">
+                            <div class="overflow-y-auto h-full" style="max-height: calc(100vh - 220px);">
+                                <table class="min-w-full bg-white border-collapse">
+                                    <thead class="header-blur sticky top-0 z-20">
+                                        <tr>
+                                            <th class="px-4 py-3 border-b text-left text-sm font-semibold text-gray-700">Title</th>
+                                            <th class="px-4 py-3 border-b text-left text-sm font-semibold text-gray-700">PR #</th>
+                                            <th class="px-4 py-3 border-b text-left text-sm font-semibold text-gray-700">Created By</th>
+                                            <th class="px-4 py-3 border-b text-left text-sm font-semibold text-gray-700">Date</th>
+                                            <th class="px-4 py-3 border-b text-left text-sm font-semibold text-gray-700">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pullRequests">
+                                        <!-- Pull requests will be displayed here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-10 text-sm text-gray-600">
+        <p>&copy; 2025 Azure DevOps PR Viewer</p>
+        <p class="mt-1">Developed by Udaykiran WebClient Team</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
